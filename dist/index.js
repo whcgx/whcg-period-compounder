@@ -30,13 +30,19 @@ class WhcgPeriodCompounder extends polymerElement_js.PolymerElement {
                 type: String,
                 notify: true,
                 readOnly: false,
+                observer: '_initialValueChanged'
             },
             label: {
                 type: String,
                 notify: true,
                 readOnly: false,
             },
-            jsondata: {
+            whcgjsonoutput: {
+                type: String,
+                notify: true,
+                readOnly: false,
+            },
+            name: {
                 type: String,
                 notify: true,
                 readOnly: false,
@@ -51,52 +57,107 @@ class WhcgPeriodCompounder extends polymerElement_js.PolymerElement {
         ]
     }
 
+    _initialValueChanged() {
+        console.log('this.initialValue');
+        console.log(this.initialValue);
+    }
+
     multiplier() {
         console.log(Number(this.period) * Number(this.rate) * Number(this.initialValue));
     };
 
     compounder() {
-        let arr = new Array(this.period).fill(this.initialValue);
+        
+
+        let startValue = JSON.parse(this.initialValue).result[0].data.cost.dataset['0'];
+
+        let arr = new Array(Number(this.period)).fill(startValue);
         let mappedArr = arr.map((element, index) => {
-            return element * Math.pow((1 + this.rate), (index + 1));
+            return element * Math.pow((1 + Number(this.rate)), (index + 1));
         });
-        console.log(mappedArr);
+       
         this.jsonBuilder(mappedArr);
     }
 
     jsonBuilder(mappedArr) {
-        let obj = {};
-        obj.result = [];
+        let whcgObj = {};
+        whcgObj.result = [];
 
-        let labelObj = {};
-        labelObj.label = this.label;
-        console.log(labelObj);
+
+        function subDataFactory(item) {
+            let dataobj = {};
+            for (let i = 0; i < item; i++) {
+                Object.assign(dataobj, {
+                    [String(i)]: mappedArr[i]
+                });
+            }
+
+            return dataobj;
+        }
+
+        function dataFactory(item) {
+            let dataobj = {};
+
+            Object.assign(dataobj, {
+                'yearlyamounts': {
+                    label: 'kr',
+                    dataset: subDataFactory(item)
+                }
+            });
+
+            return dataobj;
+        }
+
+        function resultElementObjFactory() {
+            return {
+                object: this.name,
+                data: dataFactory.call(this, mappedArr.length)
+            }
+        }
+
+        whcgObj.result.push(resultElementObjFactory.call(this));
+
+
+
+        console.log('whcgObj!!!!');
+        console.log(whcgObj);
+        this.whcgjsonoutput = JSON.stringify(whcgObj);
+
+        // console.log(this.whcgjsonoutput);
+
+
+        // let obj = {};
+        // obj.result = [];
+
+        // let labelObj = {};
+        // labelObj.label = this.label;
+        // console.log(labelObj);
 
         
-        let keyArr = mappedArr.map((element, index) => {
-            return 'year' + (index + 1);
-        });
+        // let keyArr = mappedArr.map((element, index) => {
+        //     return 'year' + (index + 1);
+        // });
 
-        let valueArr = mappedArr.map((element, index) => {
-            return element;
-        });
+        // let valueArr = mappedArr.map((element, index) => {
+        //     return element;
+        // });
 
-        let valueObj = {};
-        keyArr.forEach((key, index) => {
-            valueObj[key] = valueArr[index];
-        });
+        // let valueObj = {};
+        // keyArr.forEach((key, index) => {
+        //     valueObj[key] = valueArr[index];
+        // });
 
-        //merging two objects
-        let testObj = Object.assign(labelObj, valueObj);
+        // //merging two objects
+        // let testObj = Object.assign(labelObj, valueObj);
 
-        obj.result[0] = testObj;
+        // obj.result[0] = testObj;
 
-        this.jsondata = JSON.stringify(obj);
+        // this.whcgjsonoutput = JSON.stringify(obj);
 
-            // console.log('keyArr');
-            // console.log(keyArr);
-            // console.log('valueArr');
-            // console.log(obj); 
+        //     // console.log('keyArr');
+        //     // console.log(keyArr);
+        //     // console.log('valueArr');
+        //     // console.log(obj); 
     };
             
 
@@ -135,7 +196,7 @@ class WhcgPeriodCompounder extends polymerElement_js.PolymerElement {
     //     dataArr.forEach(element => {
     //         obj.result[0][element.label] = element.value;
     //     });
-    //     this.jsondata = JSON.stringify(obj);
+    //     this.whcgjsonoutput = JSON.stringify(obj);
     // };
 
     // arrayMultiplier(arr) {
