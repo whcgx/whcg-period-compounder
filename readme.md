@@ -1,7 +1,7 @@
 # &lt;whcg-period-compounder&gt;
 
 ```html
-<whcg-period-compounder jsondata="{{WaterJson}}" label="Water" period="{{period}}" rate="{{inflation}}" initial-value="{{initialWaterCost}}"></whcg-period-compounder>
+<whcg-period-compounder name="Elkostnader" whcgjsonoutput="{{whcgElectricityJson}}" label="Electricity" period="{{period}}" rate="{{inflation}}" initial-value="{{initialElectricityCost}}"></whcg-period-compounder>
 ```
 
 ## Getting started 
