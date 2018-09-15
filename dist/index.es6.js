@@ -63,7 +63,7 @@ class WhcgPeriodCompounder extends PolymerElement {
        // let startValue = JSON.parse(this.whcgjsoninput).result[0].data[this.datapackage].dataset['0'];
 
         let startValue = JSON.parse(this.whcgjsoninput).result[0].data[this.datapackage].dataset;
-        console.log(startValue);
+        // console.log(startValue);
         let svobj = Object.values(startValue);
         //let arr = new Array(Number(this.period)).fill(startValue);
         let mappedArr = svobj.map((element, index) => {
