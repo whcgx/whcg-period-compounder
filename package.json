@@ -1,6 +1,6 @@
 {
   "name": "@whcg/whcg-period-compounder",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "```html <whcg-period-compounder name=\"Elkostnader\" whcgjsonoutput=\"{{whcgElectricityJson}}\" label=\"Electricity\" period=\"{{period}}\" rate=\"{{inflation}}\" initial-value=\"{{initialElectricityCost}}\"></whcg-period-compounder> ```",
   "main": "dist/index.js",
   "module": "dist/index.es6.js",
